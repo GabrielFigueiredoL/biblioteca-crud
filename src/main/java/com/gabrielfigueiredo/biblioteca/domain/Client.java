@@ -1,6 +1,7 @@
 package com.gabrielfigueiredo.biblioteca.domain;
 
 import com.gabrielfigueiredo.biblioteca.dto.CreateClientDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Client {
+    @Schema(description = "ULID")
     private String id;
     private String name;
     private String phone;

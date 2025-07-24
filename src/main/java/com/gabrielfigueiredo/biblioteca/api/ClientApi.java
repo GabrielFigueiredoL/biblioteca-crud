@@ -4,6 +4,8 @@ import com.gabrielfigueiredo.biblioteca.domain.Client;
 import com.gabrielfigueiredo.biblioteca.dto.CreateClientDTO;
 import com.gabrielfigueiredo.biblioteca.dto.UpdateClientDTO;
 import com.gabrielfigueiredo.biblioteca.service.ClientService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/clients")
+@Tag(name = "Client Endpoints")
 public class ClientApi {
     @Autowired
     ClientService clientService;
@@ -31,19 +34,19 @@ public class ClientApi {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getById(@PathVariable String id) {
+    public ResponseEntity<Client> getById(@PathVariable @Parameter(description = "ULID Type") String id) {
         Client client = clientService.getById(id);
         return ResponseEntity.ok().body(client);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Client> update(@PathVariable String id, @RequestBody @Valid UpdateClientDTO dto) {
+    public ResponseEntity<Client> update(@PathVariable @Parameter(description = "ULID Type") String id, @RequestBody @Valid UpdateClientDTO dto) {
         Client client = clientService.update(id, dto);
         return ResponseEntity.ok().body(client);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable String id) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Parameter(description = "ULID Type") String id) {
         clientService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
