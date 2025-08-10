@@ -1,9 +1,8 @@
 package com.gabrielfigueiredo.biblioteca.repository.postgres;
 
 import com.gabrielfigueiredo.biblioteca.domain.Client;
-import com.gabrielfigueiredo.biblioteca.infra.exceptions.IdNotFoundException;
+import com.gabrielfigueiredo.biblioteca.infra.exceptions.DatabaseException;
 import com.gabrielfigueiredo.biblioteca.repository.interfaces.IClientRepository;
-import com.gabrielfigueiredo.biblioteca.utils.ClientUtils;
 import com.gabrielfigueiredo.biblioteca.utils.ResultSetToEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -15,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository("postgres")
 public class PostgresClientRepository implements IClientRepository {
@@ -39,24 +39,19 @@ public class PostgresClientRepository implements IClientRepository {
             preparedStatement.setString(4, client.getPhone());
             preparedStatement.executeUpdate();
         } catch (SQLException exception) {
-            throw new RuntimeException(exception);
+            throw new DatabaseException(exception.getMessage());
         }
     }
 
     @Override
-    public Client getById(String id) {
+    public Optional<Client> getById(String id) {
         String query = "SELECT * FROM clients WHERE id = ?";
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                return ResultSetToEntity.toClient(resultSet);
-            } else {
-                throw new IdNotFoundException("Id do cliente não encontrado.");
-            }
+            return Optional.of(ResultSetToEntity.toClient(resultSet));
         } catch (SQLException exception) {
-            throw new RuntimeException(exception);
+            throw new DatabaseException(exception.getMessage());
         }
     }
 
@@ -72,7 +67,7 @@ public class PostgresClientRepository implements IClientRepository {
                 clientList.add(client);
             }
         } catch (SQLException exception) {
-            throw new RuntimeException(exception);
+            throw new DatabaseException(exception.getMessage());
         }
 
         return clientList;
@@ -98,7 +93,7 @@ public class PostgresClientRepository implements IClientRepository {
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException exception) {
-            throw new RuntimeException(exception);
+            throw new DatabaseException(exception.getMessage());
         }
     }
 

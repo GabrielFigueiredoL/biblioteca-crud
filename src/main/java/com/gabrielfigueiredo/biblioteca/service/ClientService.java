@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -42,7 +43,11 @@ public class ClientService {
     }
 
     public Client getById(String id) {
-        return clientRepository.getRepository().getById(id);
+        Optional<Client> client = clientRepository.getRepository().getById(id);
+        if (client.isEmpty()) {
+            throw new IdNotFoundException("Cliente não encontrado");
+        }
+        return client.get();
     }
 
     public List<Client> getAll() {

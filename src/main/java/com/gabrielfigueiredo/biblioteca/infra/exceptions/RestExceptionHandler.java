@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
+
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IdNotFoundException.class)
@@ -26,6 +29,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidEmailException.class)
     public ResponseEntity<ErrorBodyDTO> handleInvalidEmail(InvalidEmailException exception) {
+        return ResponseEntity.unprocessableEntity().body(new ErrorBodyDTO(exception.getMessage()));
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<ErrorBodyDTO> handleSQLError(SQLException exception) {
         return ResponseEntity.unprocessableEntity().body(new ErrorBodyDTO(exception.getMessage()));
     }
 }
