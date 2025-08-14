@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository("postgres")
+@Repository("postgresClient")
 public class PostgresClientRepository implements IClientRepository {
     private final DataSource dataSource;
 
@@ -49,10 +49,14 @@ public class PostgresClientRepository implements IClientRepository {
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return Optional.of(ResultSetToEntity.toClient(resultSet));
+            if (resultSet.next()) {
+                return Optional.of(ResultSetToEntity.toClient(resultSet));
+            }
         } catch (SQLException exception) {
             throw new DatabaseException(exception.getMessage());
         }
+
+        return Optional.empty();
     }
 
     @Override
@@ -104,7 +108,7 @@ public class PostgresClientRepository implements IClientRepository {
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException exception) {
-            throw new RuntimeException(exception);
+            throw new DatabaseException(exception.getMessage());
         }
     }
 
@@ -115,7 +119,7 @@ public class PostgresClientRepository implements IClientRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException exception) {
-            throw new RuntimeException(exception);
+            throw new DatabaseException(exception.getMessage());
         }
     }
 }

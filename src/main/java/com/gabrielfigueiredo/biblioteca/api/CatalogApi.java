@@ -1,8 +1,8 @@
 package com.gabrielfigueiredo.biblioteca.api;
 
-import com.gabrielfigueiredo.biblioteca.domain.CatalogItem;
-import com.gabrielfigueiredo.biblioteca.dto.CreateCatalogItemDTO;
-import com.gabrielfigueiredo.biblioteca.dto.UpdateCatalogItemDTO;
+import com.gabrielfigueiredo.biblioteca.domain.Catalog;
+import com.gabrielfigueiredo.biblioteca.dto.CreateCatalogDTO;
+import com.gabrielfigueiredo.biblioteca.dto.UpdateCatalogDTO;
 import com.gabrielfigueiredo.biblioteca.service.CatalogService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,32 +22,26 @@ public class CatalogApi {
     private CatalogService catalogService;
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody @Valid CreateCatalogItemDTO dto) {
+    public ResponseEntity<String> create(@RequestBody @Valid CreateCatalogDTO dto) {
         String id = catalogService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<CatalogItem>> getAll() {
-        List<CatalogItem> catalogItemList = catalogService.getAll();
-        return ResponseEntity.ok().body(catalogItemList);
+    public ResponseEntity<List<Catalog>> getAll() {
+        List<Catalog> catalogList = catalogService.getAll();
+        return ResponseEntity.ok().body(catalogList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CatalogItem> getById(@PathVariable @Parameter(description = "ULID Type") String id) {
-        CatalogItem catalogItem = catalogService.getById(id);
-        return ResponseEntity.ok().body(catalogItem);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CatalogItem> update(@PathVariable @Parameter(description = "ULID Type") String id, @RequestBody @Valid UpdateCatalogItemDTO dto) {
-        CatalogItem catalogItem = catalogService.update(id, dto);
-        return ResponseEntity.ok().body(catalogItem);
+    public ResponseEntity<Catalog> getById(@PathVariable @Parameter(description = "ULID Type or (ISBN or ISSN) if byType is true") String id, @RequestParam(defaultValue = "false") boolean byType) {
+        Catalog catalog = catalogService.getById(id, byType);
+        return ResponseEntity.ok().body(catalog);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable @Parameter(description = "ULID Type") String id) {
-        catalogService.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable @Parameter(description = "ULID Type or (ISBN or ISSN) if byType is true\")") String id, @RequestParam(defaultValue = "false") boolean byType) {
+        catalogService.deleteById(id, byType);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,6 @@
 package com.gabrielfigueiredo.biblioteca.enums;
 
-public enum ItemIdType {
+public enum CatalogIdType {
     ISBN,
     ISSN
 }

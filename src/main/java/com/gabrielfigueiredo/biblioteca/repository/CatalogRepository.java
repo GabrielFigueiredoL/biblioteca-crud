@@ -20,9 +20,10 @@ public class CatalogRepository {
     }
 
     public ICatalogRepository getRepository() {
-        ICatalogRepository repository = repositories.get(selectedDB);
+        String key = selectedDB + "Catalog";
+        ICatalogRepository repository = repositories.get(key);
         if (repository == null) {
-            throw new IllegalArgumentException("Repositório não encontrado: " + selectedDB);
+            throw new IllegalArgumentException("Repositório não encontrado: " + key);
         }
         return repository;
     }

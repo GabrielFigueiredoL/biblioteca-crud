@@ -20,9 +20,10 @@ public class ClientRepository {
     }
 
     public IClientRepository getRepository() {
-        IClientRepository repository = repositories.get(selectedDB);
+        String key = selectedDB + "Client";
+        IClientRepository repository = repositories.get(key);
         if (repository == null) {
-            throw new IllegalArgumentException("Repositório não encontrado: " + selectedDB);
+            throw new IllegalArgumentException("Repositório não encontrado: " + key);
         }
         return repository;
     }

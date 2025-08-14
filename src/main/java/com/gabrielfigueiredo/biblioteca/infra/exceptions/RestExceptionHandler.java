@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 
 @RestControllerAdvice
@@ -36,4 +35,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorBodyDTO> handleSQLError(SQLException exception) {
         return ResponseEntity.unprocessableEntity().body(new ErrorBodyDTO(exception.getMessage()));
     }
+
+    @ExceptionHandler(InvalidCatalogException.class)
+    public ResponseEntity<ErrorBodyDTO> handleInvalidCatalog(InvalidCatalogException exception) {
+        return ResponseEntity.unprocessableEntity().body(new ErrorBodyDTO(exception.getMessage()));
+    }
+
+
 }

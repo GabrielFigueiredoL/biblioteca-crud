@@ -1,9 +1,10 @@
 package com.gabrielfigueiredo.biblioteca.service;
 
-import com.gabrielfigueiredo.biblioteca.domain.CatalogItem;
-import com.gabrielfigueiredo.biblioteca.dto.CreateCatalogItemDTO;
-import com.gabrielfigueiredo.biblioteca.dto.UpdateCatalogItemDTO;
+import com.gabrielfigueiredo.biblioteca.domain.Catalog;
+import com.gabrielfigueiredo.biblioteca.dto.CreateCatalogDTO;
+import com.gabrielfigueiredo.biblioteca.dto.UpdateCatalogDTO;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.IdNotFoundException;
+import com.gabrielfigueiredo.biblioteca.infra.exceptions.InvalidCatalogException;
 import com.gabrielfigueiredo.biblioteca.repository.CatalogRepository;
 import de.huxhorn.sulky.ulid.ULID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CatalogService {
@@ -22,40 +24,39 @@ public class CatalogService {
         this.catalogRepository = catalogRepository;
     }
 
-    public String create(CreateCatalogItemDTO dto) {
+    public String create(CreateCatalogDTO dto) {
         String id = new ULID().nextULID();
-        CatalogItem newCatalogItem = new CatalogItem();
+        boolean catalogExists = catalogRepository.getRepository().getById(dto.typeId(), true).isPresent();
+        if (catalogExists) {
+            throw new InvalidCatalogException("Item já existe no catalogo.");
+        }
 
-        catalogRepository.getRepository().create(newCatalogItem);
+        Catalog newCatalog = new Catalog(id, dto);
+
+        catalogRepository.getRepository().create(newCatalog);
 
         return id;
     }
 
-    public CatalogItem getById(String id) {
-        return catalogRepository.getRepository().getById(id);
+    public Catalog getById(String id, boolean getByType) {
+        Optional<Catalog> catalog = getByType ? catalogRepository.getRepository().getById(id, true) : catalogRepository.getRepository().getById(id);
+
+        if (catalog.isEmpty()) {
+            throw new IdNotFoundException("Item não encontrado");
+        }
+
+        return catalog.get();
     }
 
-    public List<CatalogItem> getAll() {
+    public List<Catalog> getAll() {
         return catalogRepository.getRepository().getAll();
     }
 
-    public void deleteById(String id) {
-        boolean isSuccess = catalogRepository.getRepository().deleteById(id);
+    public void deleteById(String id, boolean getByType) {
+        boolean isSuccess = getByType ? catalogRepository.getRepository().deleteById(id, true) : catalogRepository.getRepository().deleteById(id);
+
         if (!isSuccess) {
             throw new IdNotFoundException("Id Não encontrado");
         }
     }
-
-    public CatalogItem update(String id, UpdateCatalogItemDTO dto) {
-        CatalogItem catalogItem = this.getById(id);
-
-        Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
-        catalogItem.setUpdatedAt(updatedAt);
-
-        if (catalogRepository.getRepository().update(catalogItem)) {
-            return catalogItem;
-        } else {
-            throw new RuntimeException("Erro inesperado");
-        }
-    }
-}
+ }

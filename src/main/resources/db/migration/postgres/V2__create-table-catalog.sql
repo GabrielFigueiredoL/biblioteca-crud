@@ -1,6 +1,6 @@
-CREATE TABLE catalog_items (
+CREATE TABLE catalog (
     id VARCHAR(26) PRIMARY KEY,
-    item_type VARCHAR NOT NULL,
+    catalog_type VARCHAR NOT NULL,
     type_id VARCHAR NOT NULL,
     title VARCHAR,
     author VARCHAR,
