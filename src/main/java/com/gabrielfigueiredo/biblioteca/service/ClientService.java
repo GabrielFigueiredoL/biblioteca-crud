@@ -1,8 +1,8 @@
 package com.gabrielfigueiredo.biblioteca.service;
 
 import com.gabrielfigueiredo.biblioteca.domain.Client;
-import com.gabrielfigueiredo.biblioteca.dto.CreateClientDTO;
-import com.gabrielfigueiredo.biblioteca.dto.UpdateClientDTO;
+import com.gabrielfigueiredo.biblioteca.dto.clientDTOs.CreateClientDTO;
+import com.gabrielfigueiredo.biblioteca.dto.clientDTOs.UpdateClientDTO;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.IdNotFoundException;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.InvalidEmailException;
 import com.gabrielfigueiredo.biblioteca.repository.ClientRepository;

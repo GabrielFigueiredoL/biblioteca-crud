@@ -1,4 +1,4 @@
-package com.gabrielfigueiredo.biblioteca.dto;
+package com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs;
 
 import com.gabrielfigueiredo.biblioteca.domain.Catalog;
 

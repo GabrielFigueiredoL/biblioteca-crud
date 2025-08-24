@@ -1,8 +1,8 @@
 package com.gabrielfigueiredo.biblioteca.service;
 
 import com.gabrielfigueiredo.biblioteca.domain.Inventory;
-import com.gabrielfigueiredo.biblioteca.dto.CreateInventoryDTO;
-import com.gabrielfigueiredo.biblioteca.dto.InventoryResponseDTO;
+import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.CreateInventoryDTO;
+import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.InventoryResponseDTO;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.IdNotFoundException;
 import com.gabrielfigueiredo.biblioteca.repository.InventoryRepository;
 import de.huxhorn.sulky.ulid.ULID;

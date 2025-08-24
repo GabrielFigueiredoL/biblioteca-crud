@@ -1,8 +1,7 @@
 package com.gabrielfigueiredo.biblioteca.api;
 
-import com.gabrielfigueiredo.biblioteca.domain.Inventory;
-import com.gabrielfigueiredo.biblioteca.dto.CreateInventoryDTO;
-import com.gabrielfigueiredo.biblioteca.dto.InventoryResponseDTO;
+import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.CreateInventoryDTO;
+import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.InventoryResponseDTO;
 import com.gabrielfigueiredo.biblioteca.service.InventoryService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,8 +1,7 @@
 package com.gabrielfigueiredo.biblioteca.service;
 
 import com.gabrielfigueiredo.biblioteca.domain.Catalog;
-import com.gabrielfigueiredo.biblioteca.dto.CreateCatalogDTO;
-import com.gabrielfigueiredo.biblioteca.dto.UpdateCatalogDTO;
+import com.gabrielfigueiredo.biblioteca.dto.catalogDTOs.CreateCatalogDTO;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.IdNotFoundException;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.InvalidCatalogException;
 import com.gabrielfigueiredo.biblioteca.repository.CatalogRepository;
@@ -10,8 +9,6 @@ import de.huxhorn.sulky.ulid.ULID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

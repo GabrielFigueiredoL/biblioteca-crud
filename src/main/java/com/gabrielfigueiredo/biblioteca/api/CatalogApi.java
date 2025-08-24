@@ -1,8 +1,7 @@
 package com.gabrielfigueiredo.biblioteca.api;
 
 import com.gabrielfigueiredo.biblioteca.domain.Catalog;
-import com.gabrielfigueiredo.biblioteca.dto.CreateCatalogDTO;
-import com.gabrielfigueiredo.biblioteca.dto.UpdateCatalogDTO;
+import com.gabrielfigueiredo.biblioteca.dto.catalogDTOs.CreateCatalogDTO;
 import com.gabrielfigueiredo.biblioteca.service.CatalogService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

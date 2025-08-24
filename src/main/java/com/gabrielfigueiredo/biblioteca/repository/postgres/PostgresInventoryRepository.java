@@ -1,8 +1,7 @@
 package com.gabrielfigueiredo.biblioteca.repository.postgres;
 
-import com.gabrielfigueiredo.biblioteca.domain.Catalog;
 import com.gabrielfigueiredo.biblioteca.domain.Inventory;
-import com.gabrielfigueiredo.biblioteca.dto.InventoryResponseDTO;
+import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.InventoryResponseDTO;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.DatabaseException;
 import com.gabrielfigueiredo.biblioteca.repository.interfaces.IInventoryRepository;
 import com.gabrielfigueiredo.biblioteca.utils.ResultSetToEntity;

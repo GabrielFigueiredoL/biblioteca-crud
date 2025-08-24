@@ -1,8 +1,8 @@
 package com.gabrielfigueiredo.biblioteca.api;
 
 import com.gabrielfigueiredo.biblioteca.domain.Client;
-import com.gabrielfigueiredo.biblioteca.dto.CreateClientDTO;
-import com.gabrielfigueiredo.biblioteca.dto.UpdateClientDTO;
+import com.gabrielfigueiredo.biblioteca.dto.clientDTOs.CreateClientDTO;
+import com.gabrielfigueiredo.biblioteca.dto.clientDTOs.UpdateClientDTO;
 import com.gabrielfigueiredo.biblioteca.service.ClientService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

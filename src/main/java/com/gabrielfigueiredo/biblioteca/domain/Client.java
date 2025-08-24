@@ -1,6 +1,6 @@
 package com.gabrielfigueiredo.biblioteca.domain;
 
-import com.gabrielfigueiredo.biblioteca.dto.CreateClientDTO;
+import com.gabrielfigueiredo.biblioteca.dto.clientDTOs.CreateClientDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

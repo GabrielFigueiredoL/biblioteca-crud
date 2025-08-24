@@ -1,7 +1,7 @@
 package com.gabrielfigueiredo.biblioteca.repository.interfaces;
 
 import com.gabrielfigueiredo.biblioteca.domain.Inventory;
-import com.gabrielfigueiredo.biblioteca.dto.InventoryResponseDTO;
+import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.InventoryResponseDTO;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.gabrielfigueiredo.biblioteca.domain;
 
-import com.gabrielfigueiredo.biblioteca.dto.CreateInventoryDTO;
+import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.CreateInventoryDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

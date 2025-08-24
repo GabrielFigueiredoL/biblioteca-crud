@@ -1,9 +1,8 @@
-package com.gabrielfigueiredo.biblioteca.dto;
+package com.gabrielfigueiredo.biblioteca.dto.catalogDTOs;
 
 import com.gabrielfigueiredo.biblioteca.enums.CatalogIdType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public record CreateCatalogDTO(
         @Schema(description = "ISSN or ISBN")

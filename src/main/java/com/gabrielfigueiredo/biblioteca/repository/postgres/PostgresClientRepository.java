@@ -6,6 +6,7 @@ import com.gabrielfigueiredo.biblioteca.repository.interfaces.IClientRepository;
 import com.gabrielfigueiredo.biblioteca.utils.ResultSetToEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -102,6 +103,7 @@ public class PostgresClientRepository implements IClientRepository {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(String id) {
         String query = "DELETE FROM clients WHERE id = ?";
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {

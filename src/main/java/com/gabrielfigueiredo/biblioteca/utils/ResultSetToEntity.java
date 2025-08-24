@@ -2,8 +2,7 @@ package com.gabrielfigueiredo.biblioteca.utils;
 
 import com.gabrielfigueiredo.biblioteca.domain.Catalog;
 import com.gabrielfigueiredo.biblioteca.domain.Client;
-import com.gabrielfigueiredo.biblioteca.domain.Inventory;
-import com.gabrielfigueiredo.biblioteca.dto.InventoryResponseDTO;
+import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.InventoryResponseDTO;
 import com.gabrielfigueiredo.biblioteca.enums.CatalogIdType;
 
 import java.sql.ResultSet;
