@@ -6,18 +6,19 @@ import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.InventoryResponseDTO;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.IdNotFoundException;
 import com.gabrielfigueiredo.biblioteca.repository.InventoryRepository;
 import de.huxhorn.sulky.ulid.ULID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class InventoryService {
-    @Autowired
-    private InventoryRepository inventoryRepository;
+    private final InventoryRepository inventoryRepository;
+    private final CatalogService catalogService;
 
-    @Autowired
-    private CatalogService catalogService;
+    public InventoryService(InventoryRepository inventoryRepository, CatalogService catalogService) {
+        this.inventoryRepository = inventoryRepository;
+        this.catalogService = catalogService;
+    }
 
     public String create(CreateInventoryDTO dto) {
         String id = new ULID().nextULID();
