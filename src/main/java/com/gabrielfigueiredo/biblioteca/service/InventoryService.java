@@ -44,4 +44,11 @@ public class InventoryService {
             throw new IdNotFoundException("Id não encontrado");
         }
     }
+
+    public InventoryResponseDTO getById(String id) {
+        if (inventoryRepository.getRepository().getById(id).isEmpty()) {
+            throw new IdNotFoundException("Id não encontrado");
+        }
+        return inventoryRepository.getRepository().getById(id).get();
+    }
 }

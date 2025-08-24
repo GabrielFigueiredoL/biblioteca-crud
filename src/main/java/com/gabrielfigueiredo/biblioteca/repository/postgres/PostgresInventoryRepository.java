@@ -86,7 +86,18 @@ public class PostgresInventoryRepository implements IInventoryRepository {
     }
 
     @Override
-    public Optional<Inventory> getById(String id) {
+    public Optional<InventoryResponseDTO> getById(String id) {
+        String query = "SELECT *  FROM inventory WHERE id = ?";
+        try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(ResultSetToEntity.toInventoryItem(resultSet));
+            }
+        } catch (SQLException exception) {
+            throw new DatabaseException(exception.getMessage());
+        }
+
         return Optional.empty();
     }
 

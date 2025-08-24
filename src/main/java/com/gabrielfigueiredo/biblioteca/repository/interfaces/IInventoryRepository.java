@@ -10,6 +10,6 @@ public interface IInventoryRepository {
     void create(Inventory inventory);
     List<InventoryResponseDTO> getAll();
     Optional<Inventory> getById(String id, boolean getByType);
-    Optional<Inventory> getById(String id);
+    Optional<InventoryResponseDTO> getById(String id);
     boolean deleteById(String id);
 }
