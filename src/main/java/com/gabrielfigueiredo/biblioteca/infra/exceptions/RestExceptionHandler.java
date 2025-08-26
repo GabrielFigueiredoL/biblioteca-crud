@@ -41,5 +41,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.unprocessableEntity().body(new ErrorBodyDTO(exception.getMessage()));
     }
 
+    @ExceptionHandler(InventoryNotAvailableException.class)
+    public ResponseEntity<ErrorBodyDTO> handleInventoryNotAvailable(InventoryNotAvailableException exception) {
+        return ResponseEntity.unprocessableEntity().body(new  ErrorBodyDTO(exception.getMessage()));
+    }
 
+    @ExceptionHandler(InvalidDateException.class)
+    public ResponseEntity<ErrorBodyDTO> handleInventoryNotAvailable(InvalidDateException exception) {
+        return ResponseEntity.unprocessableEntity().body(new  ErrorBodyDTO(exception.getMessage()));
+    }
 }

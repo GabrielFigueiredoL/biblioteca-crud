@@ -12,4 +12,5 @@ public interface IInventoryRepository {
     Optional<Inventory> getById(String id, boolean getByType);
     Optional<InventoryResponseDTO> getById(String id);
     boolean deleteById(String id);
+    boolean updateAvailable(String id);
 }

@@ -51,4 +51,12 @@ public class InventoryService {
         }
         return inventoryRepository.getRepository().getById(id).get();
     }
+
+    public boolean updateAvailable(String id) {
+        if (getById(id) == null) {
+            throw new IdNotFoundException("Id não encontrado");
+        }
+
+        return inventoryRepository.getRepository().updateAvailable(id);
+    }
 }

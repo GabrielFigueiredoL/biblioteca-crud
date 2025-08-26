@@ -163,8 +163,25 @@ public class PostgresInventoryRepository implements IInventoryRepository {
     public boolean deleteById(String id) {
         String query = String.format("""
             DELETE FROM %s WHERE id = ?
-        """, InventoryConstants.TABLE_NAME);
+            """, InventoryConstants.TABLE_NAME);
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, id);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException exception) {
+            throw new DatabaseException(exception.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateAvailable(String id) {
+        String query = String.format("""
+            UPDATE %s
+            SET is_available = NOT is_available
+            WHERE id = ?
+            """, InventoryConstants.TABLE_NAME);
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException exception) {
