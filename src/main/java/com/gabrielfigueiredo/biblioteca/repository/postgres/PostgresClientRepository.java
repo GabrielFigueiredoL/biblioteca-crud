@@ -2,6 +2,7 @@ package com.gabrielfigueiredo.biblioteca.repository.postgres;
 
 import com.gabrielfigueiredo.biblioteca.domain.Client;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.DatabaseException;
+import com.gabrielfigueiredo.biblioteca.repository.constants.ClientConstants;
 import com.gabrielfigueiredo.biblioteca.repository.interfaces.IClientRepository;
 import com.gabrielfigueiredo.biblioteca.utils.ResultSetToEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,11 +28,11 @@ public class PostgresClientRepository implements IClientRepository {
 
     @Override
     public void create(Client client) {
-        String query = """
-                INSERT INTO clients
+        String query = String.format("""
+                INSERT INTO %s
                 (id, name, email, phone)
                 VALUES (?, ?, ?, ?)
-                """;
+                """, ClientConstants.TABLE_NAME);
 
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, client.getId());
@@ -46,7 +47,26 @@ public class PostgresClientRepository implements IClientRepository {
 
     @Override
     public Optional<Client> getById(String id) {
-        String query = "SELECT * FROM clients WHERE id = ?";
+        String query = String.format("""
+            SELECT
+                c.id AS %s,
+                c.name AS %s,
+                c.email AS %s,
+                c.phone AS %s,
+                c.created_at AS %s,
+                c.updated_at AS %s
+            FROM %s c
+            WHERE c.id = ?;
+            """,
+                ClientConstants.ID,
+                ClientConstants.NAME,
+                ClientConstants.EMAIL,
+                ClientConstants.PHONE,
+                ClientConstants.CREATED_AT,
+                ClientConstants.UPDATED_AT,
+                ClientConstants.TABLE_NAME
+        );
+
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,7 +82,24 @@ public class PostgresClientRepository implements IClientRepository {
 
     @Override
     public List<Client> getAll() {
-        String query = "SELECT * FROM clients";
+        String query = String.format("""
+            SELECT
+                c.id AS %s,
+                c.name AS %s,
+                c.email AS %s,
+                c.phone AS %s,
+                c.created_at AS %s,
+                c.updated_at AS %s
+            FROM %s c
+            """,
+                ClientConstants.ID,
+                ClientConstants.NAME,
+                ClientConstants.EMAIL,
+                ClientConstants.PHONE,
+                ClientConstants.CREATED_AT,
+                ClientConstants.UPDATED_AT,
+                ClientConstants.TABLE_NAME
+        );
         List<Client> clientList = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -80,14 +117,14 @@ public class PostgresClientRepository implements IClientRepository {
 
     @Override
     public boolean update(Client client) {
-        String query = """
-                    UPDATE clients
+        String query = String.format("""
+                    UPDATE %s
                     SET name = ?,
                     email = ?,
                     phone = ?,
                     updated_at = ?
                     WHERE id = ?
-                """;
+                """, ClientConstants.TABLE_NAME);
 
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, client.getName());
@@ -105,7 +142,9 @@ public class PostgresClientRepository implements IClientRepository {
     @Override
     @Transactional
     public boolean deleteById(String id) {
-        String query = "DELETE FROM clients WHERE id = ?";
+        String query = String.format("""
+                DELETE FROM %s WHERE id = ?
+                """, ClientConstants.TABLE_NAME);
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() > 0;
@@ -115,7 +154,9 @@ public class PostgresClientRepository implements IClientRepository {
     }
 
     public boolean emailExists(String email) {
-        String query = "SELECT email FROM clients WHERE email = ?";
+        String query = String.format("""
+                SELECT email FROM %s WHERE email = ?
+                """, ClientConstants.TABLE_NAME);
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();

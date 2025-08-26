@@ -3,6 +3,8 @@ package com.gabrielfigueiredo.biblioteca.repository.postgres;
 import com.gabrielfigueiredo.biblioteca.domain.Inventory;
 import com.gabrielfigueiredo.biblioteca.dto.inventoryDTOs.InventoryResponseDTO;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.DatabaseException;
+import com.gabrielfigueiredo.biblioteca.repository.constants.CatalogConstants;
+import com.gabrielfigueiredo.biblioteca.repository.constants.InventoryConstants;
 import com.gabrielfigueiredo.biblioteca.repository.interfaces.IInventoryRepository;
 import com.gabrielfigueiredo.biblioteca.utils.ResultSetToEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,11 +29,11 @@ public class PostgresInventoryRepository implements IInventoryRepository {
 
     @Override
     public void create(Inventory inventory) {
-        String query = """
-                INSERT INTO inventory
+        String query = String.format("""
+                INSERT INTO %s
                 (id, is_available, catalog_id)
                 VALUES (?, ?, ?)
-                """;
+                """, InventoryConstants.TABLE_NAME);
 
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, inventory.getId());
@@ -45,26 +47,44 @@ public class PostgresInventoryRepository implements IInventoryRepository {
 
     @Override
     public List<InventoryResponseDTO> getAll() {
-        String query =  """
-                SELECT
-                    i.id AS inventory_id,
-                    i.created_at AS inventory_created_at,
-                    i.updated_at AS inventory_updated_at,
-                    i.is_available,
-                    i.catalog_id AS inventory_catalog_id,
-                    c.id AS catalog_id,
-                    c.created_at AS catalog_created_at,
-                    c.updated_at AS catalog_updated_at,
-                    c.catalog_type,
-                    c.type_id,
-                    c.title,
-                    c.author,
-                    c.publisher,
-                    c.year,
-                    c.edition
-                FROM inventory i
-                JOIN catalog c ON i.catalog_id = c.id;
-    """;
+        String query = String.format("""
+            SELECT
+                i.id AS %s,
+                i.is_available AS %s,
+                i.catalog_id AS %s,
+                i.created_at AS %s,
+                i.updated_at AS %s,
+                c.id AS %s,
+                c.created_at AS %s,
+                c.updated_at AS %s,
+                c.catalog_type AS %s,
+                c.type_id AS %s,
+                c.title AS %s,
+                c.author AS %s,
+                c.publisher AS %s,
+                c.year AS %s,
+                c.edition AS %s
+            FROM %s i
+            JOIN %s c ON i.catalog_id = c.id;
+            """,
+                InventoryConstants.ID,
+                InventoryConstants.IS_AVAILABLE,
+                InventoryConstants.CATALOG_ID,
+                InventoryConstants.CREATED_AT,
+                InventoryConstants.UPDATED_AT,
+                CatalogConstants.ID,
+                CatalogConstants.CREATED_AT,
+                CatalogConstants.UPDATED_AT,
+                CatalogConstants.TYPE,
+                CatalogConstants.TYPE_ID,
+                CatalogConstants.TITLE,
+                CatalogConstants.AUTHOR,
+                CatalogConstants.PUBLISHER,
+                CatalogConstants.YEAR,
+                CatalogConstants.EDITION,
+                InventoryConstants.TABLE_NAME,
+                CatalogConstants.TABLE_NAME
+        );
         List<InventoryResponseDTO> inventoryList = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -87,7 +107,45 @@ public class PostgresInventoryRepository implements IInventoryRepository {
 
     @Override
     public Optional<InventoryResponseDTO> getById(String id) {
-        String query = "SELECT *  FROM inventory WHERE id = ?";
+        String query = String.format("""
+            SELECT
+                i.id AS %s,
+                i.is_available AS %s,
+                i.catalog_id AS %s,
+                i.created_at AS %s,
+                i.updated_at AS %s,
+                c.id AS %s,
+                c.created_at AS %s,
+                c.updated_at AS %s,
+                c.catalog_type AS %s,
+                c.type_id AS %s,
+                c.title AS %s,
+                c.author AS %s,
+                c.publisher AS %s,
+                c.year AS %s,
+                c.edition AS %s
+            FROM %s i
+            JOIN %s c ON i.catalog_id = c.id
+            WHERE i.id = ?;
+            """,
+                InventoryConstants.ID,
+                InventoryConstants.IS_AVAILABLE,
+                InventoryConstants.CATALOG_ID,
+                InventoryConstants.CREATED_AT,
+                InventoryConstants.UPDATED_AT,
+                CatalogConstants.ID,
+                CatalogConstants.CREATED_AT,
+                CatalogConstants.UPDATED_AT,
+                CatalogConstants.TYPE,
+                CatalogConstants.TYPE_ID,
+                CatalogConstants.TITLE,
+                CatalogConstants.AUTHOR,
+                CatalogConstants.PUBLISHER,
+                CatalogConstants.YEAR,
+                CatalogConstants.EDITION,
+                InventoryConstants.TABLE_NAME,
+                CatalogConstants.TABLE_NAME
+        );
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -103,7 +161,9 @@ public class PostgresInventoryRepository implements IInventoryRepository {
 
     @Override
     public boolean deleteById(String id) {
-        String query = "DELETE FROM inventory WHERE id = ?";
+        String query = String.format("""
+            DELETE FROM %s WHERE id = ?
+        """, InventoryConstants.TABLE_NAME);
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() > 0;

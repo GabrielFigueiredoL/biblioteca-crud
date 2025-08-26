@@ -2,6 +2,7 @@ package com.gabrielfigueiredo.biblioteca.repository.postgres;
 
 import com.gabrielfigueiredo.biblioteca.domain.Catalog;
 import com.gabrielfigueiredo.biblioteca.infra.exceptions.DatabaseException;
+import com.gabrielfigueiredo.biblioteca.repository.constants.CatalogConstants;
 import com.gabrielfigueiredo.biblioteca.repository.interfaces.ICatalogRepository;
 import com.gabrielfigueiredo.biblioteca.utils.ResultSetToEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,11 +27,12 @@ public class PostgresCatalogRepository implements ICatalogRepository {
 
     @Override
     public void create(Catalog catalog) {
-        String query = """
-                INSERT INTO catalog
+        String query = String.format("""
+                INSERT INTO %s
                 (id, catalog_type, type_id, title, author, publisher, year, edition)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """;
+                """, CatalogConstants.TABLE_NAME
+        );
 
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, catalog.getId());
@@ -49,23 +51,70 @@ public class PostgresCatalogRepository implements ICatalogRepository {
 
     @Override
     public Optional<Catalog> getById(String id, boolean getByType) {
-        String query = "SELECT * FROM catalog WHERE type_id = ?";
-        try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(ResultSetToEntity.toCatalogItem(resultSet));
-            }
-        } catch (SQLException exception) {
-            throw new DatabaseException(exception.getMessage());
-        }
+        String query = String.format("""
+            SELECT
+                c.id AS %s,
+                c.catalog_type AS %s,
+                c.type_id AS %s,
+                c.title AS %s,
+                c.author AS %s,
+                c.publisher AS %s,
+                c.year AS %s,
+                c.edition AS %s,
+                c.created_at AS %s,
+                c.updated_at AS %s
+            FROM %s c
+            WHERE c.type_id = ?;
+            """,
+                CatalogConstants.ID,
+                CatalogConstants.TYPE,
+                CatalogConstants.TYPE_ID,
+                CatalogConstants.TITLE,
+                CatalogConstants.AUTHOR,
+                CatalogConstants.PUBLISHER,
+                CatalogConstants.YEAR,
+                CatalogConstants.EDITION,
+                CatalogConstants.CREATED_AT,
+                CatalogConstants.UPDATED_AT,
+                CatalogConstants.TABLE_NAME
+        );
 
-        return Optional.empty();
+        return getCatalog(id, query);
     }
 
     @Override
     public Optional<Catalog> getById(String id) {
-        String query = "SELECT * FROM catalog WHERE id = ?";
+        String query = String.format("""
+            SELECT
+                c.id AS %s,
+                c.catalog_type AS %s,
+                c.type_id AS %s,
+                c.title AS %s,
+                c.author AS %s,
+                c.publisher AS %s,
+                c.year AS %s,
+                c.edition AS %s,
+                c.created_at AS %s,
+                c.updated_at AS %s
+            FROM %s c
+            WHERE c.id = ?;
+            """,
+                CatalogConstants.ID,
+                CatalogConstants.TYPE,
+                CatalogConstants.TYPE_ID,
+                CatalogConstants.TITLE,
+                CatalogConstants.AUTHOR,
+                CatalogConstants.PUBLISHER,
+                CatalogConstants.YEAR,
+                CatalogConstants.EDITION,
+                CatalogConstants.CREATED_AT,
+                CatalogConstants.UPDATED_AT,
+                CatalogConstants.TABLE_NAME
+        );
+        return getCatalog(id, query);
+    }
+
+    private Optional<Catalog> getCatalog(String id, String query) {
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -81,7 +130,32 @@ public class PostgresCatalogRepository implements ICatalogRepository {
 
     @Override
     public List<Catalog> getAll() {
-        String query = "SELECT * FROM catalog";
+        String query = String.format("""
+            SELECT
+                c.id AS %s,
+                c.catalog_type AS %s,
+                c.type_id AS %s,
+                c.title AS %s,
+                c.author AS %s,
+                c.publisher AS %s,
+                c.year AS %s,
+                c.edition AS %s,
+                c.created_at AS %s,
+                c.updated_at AS %s
+            FROM %s c
+            """,
+                CatalogConstants.ID,
+                CatalogConstants.TYPE,
+                CatalogConstants.TYPE_ID,
+                CatalogConstants.TITLE,
+                CatalogConstants.AUTHOR,
+                CatalogConstants.PUBLISHER,
+                CatalogConstants.YEAR,
+                CatalogConstants.EDITION,
+                CatalogConstants.CREATED_AT,
+                CatalogConstants.UPDATED_AT,
+                CatalogConstants.TABLE_NAME
+        );
         List<Catalog> catalogList = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -99,7 +173,9 @@ public class PostgresCatalogRepository implements ICatalogRepository {
 
     @Override
     public boolean deleteById(String id) {
-        String query = "DELETE FROM catalog WHERE id = ?";
+        String query = String.format("""
+                DELETE FROM %s WHERE id = ?
+                """, CatalogConstants.TABLE_NAME);
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() > 0;
@@ -110,7 +186,9 @@ public class PostgresCatalogRepository implements ICatalogRepository {
 
     @Override
     public boolean deleteById(String id, boolean getByType) {
-        String query = "DELETE FROM catalog WHERE type_id = ?";
+        String query = String.format("""
+                DELETE FROM %s WHERE type_id = ?
+                """, CatalogConstants.TABLE_NAME);
         try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() > 0;
